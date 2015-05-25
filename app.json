@@ -1,0 +1,7 @@
+{
+  "name": "SIGFOX Connected conference demos",
+  "description": "Backend for the connected conference demos",
+  "repository": "https://github.com/nicolsc/sigfox-connectedconf-demos",
+  "logo": "http://www.sigfox.com/static/sigfox/img/src/logo-sigfox.png",
+  "keywords": ["sigfox", "telecom-design", "TD1204", "GPS", "Atmel", "iot"]
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><%=title%></title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header"><%=h1 || title%></h1>
+          <div><%=moment().format('MMMM Do YYYY, h:mm:ss a'); %></div>
+          <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>Event date</th>
+                  <th>Msg received at</th>
+                  <th>Location</th>
+                  <th>Full payload</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <% entries.forEach(function(entry){%>
+                  <tr>
+                    <td><%=entry.deviceid%></td>
+                    <td><%=entry.date ? moment(entry.date).fromNow()+' : '+moment(entry.date).format() : 'N/A'%></td>
+                    <td><%=moment(entry.receivedat).format()%></td>
+                    <td>
+                    <%
+                    if (entry.geoloc && entry.lat && entry.lng){%>
+                      <img src="https://maps.googleapis.com/maps/api/staticmap?center=<%=entry.lat%>,<%=entry.lng%>&zoom=11&size=300x300&maptype=roadmap&markers=color:green%7Clabel:S%7C<%=entry.lat%>,<%=entry.lng%>" />
+                    <%}
+                    else{%>
+                      No GPS data
+                    <%}%>
+                    </td>
+                    <td><%=entry.payload%></td>
+                  </tr>
+                <%})%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
