@@ -57,7 +57,7 @@ app.post('/gps-demo', requestLogger, function(req, res, next){
     date : new Date(req.body.time * 1000).toISOString(),
     receivedat: new Date().toISOString(),
     snr : req.body.snr,
-    geoloc : req.body.data !== "4750534b4f", //4750534b4f == GPSKO
+    geoloc : req.body.data !== "4750532054494d454f5554", //4750532054494d454f5554 == GPS TIMEOUT
     payload : req.body.data,
     coords: null //point (lat,lng). Wait for info to decode frame
   };
