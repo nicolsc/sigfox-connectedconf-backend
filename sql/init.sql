@@ -1,6 +1,6 @@
 
-/*drop table if exists request_logs;
-drop table if exists td1204_gps_demo; */
+drop table if exists request_logs;
+drop table if exists td1204_gps_demo; 
 drop table if exists atmel_demo;
 
 
@@ -20,7 +20,8 @@ create table if not exists td1204_gps_demo(
   receivedat timestamp not null,
   snr numeric(4,2) null,
   geoloc bool,
-  coords point null,
+  lat numeric(8,6) null,
+  lng numeric(8,6) null,
   payload varchar(24) not null
 );
 
