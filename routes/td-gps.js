@@ -52,7 +52,7 @@ router.post('/', requestLogger, function(req, res, next){
   });
 });
 router.get('/', requestLogger, function(req, res, next){
-  let qry = 'select deviceid, date, receivedat, geoloc, coords[0] lat, coords[1] lng, snr, payload from td1204_gps_demo order by date desc';
+  let qry = 'select deviceid, date, receivedat, geoloc, lat, lng, snr, payload from td1204_gps_demo order by date desc';
   debug(qry);
   db.db.query(qry)
   .then(function(entries){
