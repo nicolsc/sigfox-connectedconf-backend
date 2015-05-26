@@ -55,7 +55,7 @@
       var data = new google.visualization.DataTable();
       data.addColumn('date', 'Time');
       data.addColumn('number', 'Temperature');
-      data.addColumn('number', 'Light level');
+      data.addColumn('number', 'Light level / 30');
 
       data.addRows(this.getFormattedData());
       
@@ -67,7 +67,7 @@
     /*
     * @function
     * return data formatted for Google Charts
-    * [ [date, temperature, brightness/20 ]]
+    * [ [date, temperature, brightness/30 ]]
     **/
     getFormattedData: function(){
       return entries.map(function(entry){
