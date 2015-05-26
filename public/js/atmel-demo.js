@@ -1,7 +1,15 @@
 (function(){
   $(document).ready(function() {
     AtmelDemo.init();
+    
+    updateNav();
   });
+  
+  
+  function updateNav(){
+    $('li a[href="'+window.location.pathname+'"]').parent().addClass('active');
+  }
+  
   
   var AtmelDemo =  {
     pollInterval: 10*1000,//ms

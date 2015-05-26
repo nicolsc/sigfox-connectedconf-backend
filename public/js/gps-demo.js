@@ -1,7 +1,13 @@
 (function(){
   $(document).ready(function() {
     GPSDemo.init();
+    
+    updateNav();
   });
+  
+  function updateNav(){
+    $('li a[href="'+window.location.pathname+'"]').parent().addClass('active');
+  }
   
   var GPSDemo =  {
     pollInterval: 30*1000,//ms
@@ -14,6 +20,7 @@
       region:'FR'
     },
     init: function(){
+      
       this.chartTarget = document.getElementById('chart');
       this.initChart();
       this.setChartData();
