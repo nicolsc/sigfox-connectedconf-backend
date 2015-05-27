@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include includes/head %>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line']}]}"></script>   
+    <script type="text/javascript">
+      var entries = JSON.parse('<%- JSON.stringify({data:entries})%>').data;
+    </script>
+  </head>
+
+  <body class="sensit">
+
+    <%- include includes/nav %>
+    <div class="container-fluid theme-showcase">
+      <div class="jumbotron">
+        <h1>Sens'it demo</h1>
+        <p>Coming (very) soon  ☺</p>
+      </div>  
+    </div>
+    <%- include includes/footer %>
+ <script src="/js/atmel-demo.js"></script>
+  </body>
+</html>
