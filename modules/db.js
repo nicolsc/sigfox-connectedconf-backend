@@ -1,6 +1,6 @@
 'use strict';
 const util = require('util');
-const debug = require('debug')('sigfox-demo-td1204:db');
+const debug = require('debug')('sigfox-connectedconf:db');
 const pg = require('pg-promise');
 const format = require('util').format;
 const dbUrl = process.env.DATABASE_URL || 'postgresql://localhost:5432/sigfox';
@@ -8,14 +8,40 @@ const dbUrl = process.env.DATABASE_URL || 'postgresql://localhost:5432/sigfox';
 
 module.exports = {
   db : undefined,
+  pgError: function(err, details){
+    debug("PostgreSQL error : %s", err ? err.message : 'unknown');
+    if (details.cn) {
+        // this is a connection-related error;
+        // cn = connection details that were used.
+      debug('Connection error');
+    }
+    if (details.query) {
+        debug('Query error : %s', details.query);
+        if (details.params) {
+            debug("Parameters: %s", details.params);
+        }
+    }
+    if (details.ctx) {
+        debug('transaction err : %s', details.ctx);
+    }
+  },
+  pgDisconnect: function(client){
+    var cp = client.connectionParameters;
+    debug("Disconnecting from database %s", cp.database);
+  },
   /**
   * Connect to the DB, using pg-promise 
   * @function
   * @return {Promise}
   **/
   connect : function() {
+    
+    
     return new Promise(function(resolve, reject){
-      pg()(dbUrl).connect()
+      pg({
+        disconnect: this.pgDisconnect,
+        error: this.pgError
+      })(dbUrl).connect()
       .then(function(db){
         this.db = db;
         resolve(db);
