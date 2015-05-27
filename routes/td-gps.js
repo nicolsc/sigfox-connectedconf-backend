@@ -5,6 +5,7 @@ const router = express.Router();
 const requestLogger = require('../middlewares/requestLogger');
 const db = require('../modules/db');
 const debug = require('debug')('sigfox-connectedconf:td-gps');
+const GPS_TIMEOUT = '4750532054494d454f5554';
 
 router.post('/', requestLogger, function(req, res, next){
   if (!req.body || !req.body.data){
@@ -14,19 +15,20 @@ router.post('/', requestLogger, function(req, res, next){
     err.message = 'Invalid data';
     return next(err);
   }
-  const coords = getGPSCoords(req.body.data);
+  let coords = null;
+  if (req.body.data !== GPS_TIMEOUT){
+    coords = getGPSCoords(req.body.data);
+  }
   debug("coords", coords);
-  const validCoords = coords && typeof coords.lat !== 'undefined' && typeof coords.lng !== 'undefined';
-  //4750532054494d454f5554 == GPS TIMEOUT
   let data = {
     deviceid: req.body.id,
     date : new Date(req.body.time * 1000).toISOString(),
     receivedat: new Date().toISOString(),
     snr : req.body.snr,
-    geoloc : validCoords, 
+    geoloc : coords && coords.lat !== null && coords.lng !== null, 
     payload : req.body.data,
-    lat: coords.lat, 
-    lng: coords.lng
+    lat: coords ? coords.lat : null, 
+    lng: coords ? coords.lng : null
   };
   debug("data", data);
   db.insertOne('td1204_gps_demo', data)
@@ -85,17 +87,17 @@ function getGPSCoords(payload){
   if (!payload){
     debug('Empty payload');
     
-    return null;
+    return {lat:null, lng:null};
   }
   const data = getFrameComposition(payload);
   if (!data){
     debug('Invalid GPS  frame - %s', payload);
-    return null;
+    return {lat:null, lng:null};
   }
   
   if (!data.geoloc || !validationCheck(data)){
     debug('No geoloc data (%s)', data.geoloc);
-    return null;
+    return {lat:null, lng:null};
   }
   return _getLatLng(data.latlng, data.latsign, data.lngsign);
 }
@@ -151,7 +153,6 @@ function getFrameBinary(frameHex){
 * @return {String} binary
 **/
 function getBinaryFromHex(byte){
-  debug('getBinaryFromHex', byte);
   let num = Number(parseInt(byte, 16));
   if (isNaN(num)){
     debug('Invalid byte %s', byte);
