@@ -1,7 +1,7 @@
-
 drop table if exists request_logs;
 drop table if exists td1204_gps_demo; 
 drop table if exists atmel_demo;
+drop table if exists akene_demo;
 
 
 create table if not exists request_logs(
@@ -33,5 +33,15 @@ create table if not exists atmel_demo(
   snr numeric(4,2) null,
   temperature smallint null,
   brightness smallint null,
+  payload varchar(24) not null
+);
+
+create table if not exists akene_demo(
+  id serial primary key,
+  deviceid varchar(12) not null,
+  date timestamp not null,
+  receivedat timestamp not null,
+  snr numeric(4,2) null,
+  counter smallint null,
   payload varchar(24) not null
 );

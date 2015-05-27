@@ -11,6 +11,7 @@ const app = express();
 
 const atmel = require('./routes/atmel');
 const tdGps = require('./routes/td-gps');
+const akene = require('./routes/akene');
 const logs = require('./routes/logs');
 
 const requestLogger = require('./middlewares/requestLogger');
@@ -26,6 +27,7 @@ app.locals.moment = require('moment');
 
 app.use('/atmel', atmel);
 app.use('/td-gps', tdGps);
+app.use('/akene', akene);
 app.use('/logs', logs);
 
 
