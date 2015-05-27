@@ -25,7 +25,9 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.locals.moment = require('moment');
 
 
-
+app.get('/', function(req, res){
+  res.redirect('/atmel');
+});
 app.use('/atmel', atmel);
 app.use('/td-gps', tdGps);
 app.use('/akene', akene);
