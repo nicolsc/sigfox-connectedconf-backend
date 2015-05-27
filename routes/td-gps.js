@@ -185,6 +185,14 @@ function getBinaryFromHex(byte){
 **/
 function _getLatLng(latLng2, latSign, lngSign){
   debug('_getLatLng', latLng2);
+  //if the 48 bits are all set to 1, this means there was a GPS issue. return null;
+  if (latLng2.match(/1{48}/)){
+    return {
+      lat:null, 
+      lng:null
+    }
+  };
+  
   const latLng10 = parseInt(latLng2, 2) ;
 
   const var0 = parseInt((latLng10  % 10000000) / 100000, 10);
@@ -192,10 +200,49 @@ function _getLatLng(latLng2, latSign, lngSign){
   const var2 = parseInt(latLng10 / 1000000000000, 10);
   const var3 = parseInt((latLng10 % 1000000000000 - latLng10 % 10000000) / 10000000, 10) / 1000 / 60;
   
+  let lat = (var0 + var1) * (latSign === '0' ? 1 : -1);
+  let lng = (var2 + var3) * (lngSign === '0' ? 1 : -1);
+  
+  if (!isValidLng(lat)){
+    debug('Invalid lat value %s', lat);
+    lat = null;
+  }
+  
+  if (!isValidLng(lng)){
+    debug('Invalid lng value %s', lat);
+    lng = null;
+  }
+  
   return {
-    lat: (var0 + var1) * (latSign === '0' ? 1 : -1),
-    lng: (var2 + var3) * (lngSign === '0' ? 1 : -1)
+    lat: lat,
+    lng: lng
   };
+}
+function isValidLat(lat){
+  lat = Number(lat);
+  
+  if (isNaN(lat)){
+    return false;
+  }
+  
+  if (lat < -90 || lat > 90){
+    return false;
+  }
+  
+  return true;
+}
+function isValidLng(lng){
+  lng = Number(lng);
+  
+  if (isNaN(lng)){
+    return false;
+  }
+  
+  if (lng < -180 || lng > 180){
+    return false;
+  }
+  
+  return true;
 }
 /**
 * @function
