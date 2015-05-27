@@ -8,11 +8,16 @@ const debug = require('debug')('sigfox-connectedconf:akene');
 
 router.post('/', requestLogger, function(req, res, next){
   debug('POST /akene');
-  if (!req.body){
+  if (!req.body || !req.body.data){
      let err = new Error();
     err.status = 400;
     err.message = 'Invalid data';
     return next(err);
+  }
+  else{
+    //Tell the SIGFOX backend that callback reception was OK
+    res.status(200);
+    res.send('♡');
   }
   debug(req.body.data);
   //frame pattern : Counter{1 byte}
@@ -30,6 +35,8 @@ router.post('/', requestLogger, function(req, res, next){
   debug('data', data);
   db.insertOne('akene_demo', data)
   .then(function(entry){
+    debug('Message stored in db');
+    /*
     res.status(201);
     res.format({
       json: function(){
@@ -43,11 +50,11 @@ router.post('/', requestLogger, function(req, res, next){
         err.status=406;
         next(err);
       }
-    });
+    });*/
   })
   .catch(function(err){
     debug('Error while logging akene demo data : %s', err.message);
-    next(err);
+    //next(err);
   });
 });
 router.get('/', function(req, res, next){

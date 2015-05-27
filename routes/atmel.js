@@ -7,12 +7,19 @@ const db = require('../modules/db');
 const debug = require('debug')('sigfox-connectedconf:atmel');
 
 router.post('/', requestLogger, function(req, res, next){
-  if (!req.body){
+  if (!req.body || !req.body.data){
      let err = new Error();
     err.status = 400;
     err.message = 'Invalid data';
     return next(err);
   }
+  else{
+    //Tell the SIGFOX backend that callback reception was OK
+    res.status(200);
+    res.send('♡');
+  }
+  
+  
   //frame pattern : Temp(1 byte)Brightness(2 bytes)
   const pattern = /(.{1,2})(.{1,4})/;
   const frame = req.body.data.match(pattern);
@@ -28,7 +35,8 @@ router.post('/', requestLogger, function(req, res, next){
   
   db.insertOne('atmel_demo', data)
   .then(function(entry){
-    res.status(201);
+    debug('Message saved to db');
+    /*res.status(201);
     res.format({
       json: function(){
         res.json(entry);
@@ -41,11 +49,11 @@ router.post('/', requestLogger, function(req, res, next){
         err.status=406;
         next(err);
       }
-    });
+    });*/
   })
   .catch(function(err){
     debug('Error while logging atmel demo data : %s', err.message);
-    next(err);
+    //next(err);
   });
 });
 router.get('/', function(req, res, next){

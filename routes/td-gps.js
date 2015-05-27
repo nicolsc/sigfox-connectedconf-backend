@@ -9,11 +9,15 @@ const GPS_TIMEOUT = '4750532054494d454f5554';
 
 router.post('/', requestLogger, function(req, res, next){
   if (!req.body || !req.body.data){
-    debug("body");debug(req.body);
     let err = new Error();
     err.status = 400;
     err.message = 'Invalid data';
     return next(err);
+  }
+  else{
+    //Tell the SIGFOX backend that callback reception was OK
+    res.status(200);
+    res.send('♡');
   }
   let coords = null;
   if (req.body.data !== GPS_TIMEOUT){
@@ -33,6 +37,8 @@ router.post('/', requestLogger, function(req, res, next){
   debug("data", data);
   db.insertOne('td1204_gps_demo', data)
   .then(function(entry){
+    debug('Message stored in db');
+    /*
     res.status(201);
     res.format({
       json: function(){
@@ -47,10 +53,11 @@ router.post('/', requestLogger, function(req, res, next){
         next(err);
       }
     });
+    */
   })
   .catch(function(err){
     debug('Error while logging movement report : %s', err.message);
-    next(err);
+    //next(err);
   });
 });
 router.get('/', function(req, res, next){
